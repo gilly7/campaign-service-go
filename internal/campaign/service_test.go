@@ -51,7 +51,7 @@ func (s *testService) CreateCampaign(ctx context.Context, req models.CreateCampa
 			ID:         "msg-" + userID,
 			CampaignID: campaign.ID,
 			UserID:     userID,
-			UserEmail:  userID + "@example.com",
+			UserEmail:  userID + "@gmail.com",
 			UserData:   data,
 		}
 

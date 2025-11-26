@@ -40,7 +40,7 @@ func CreateCampaign(baseURL string, name, template string, userIDs ...string) (*
 	return HTTP.Do(req)
 }
 
-// Example usage in a test or main.go
+// Example shows how to use the CreateCampaign function
 func Example() {
 	resp, err := CreateCampaign("http://localhost:8080", "Flash Sale", "Hi {{.FirstName}}! Get {{.Discount}}% off!", "alice", "bob", "charlie")
 	if err != nil {

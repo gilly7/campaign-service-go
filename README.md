@@ -1,3 +1,20 @@
+## Sample Run Output
+
+```
+PS C:\Users\ngeno\MyDev\campaign-service> go run cmd/server/main.go
+2025/11/26 12:57:11 Looking for migrations in: C:\Users\ngeno\MyDev\campaign-service\migrations
+2025/11/26 12:57:11 goose: no migrations to run. current version: 20251126
+2025/11/26 12:57:11 Migrations applied successfully!
+2025/11/26 12:57:11 Connected to PostgreSQL + migrations applied
+2025/11/26 12:57:11 Service running. Press Ctrl+C to stop.
+2025/11/26 12:57:11 Server starting on http://localhost:8080
+2025/11/26 12:57:20 Queued message for alice@gmail.com
+2025/11/26 12:57:20 Sending to alice@gmail.com: Hey UserA! Get 20% off – https://example.com/offer/alice
+2025/11/26 12:57:20 Queued message for bob@gmail.com
+2025/11/26 12:57:20 Queued message for ngenogilbert07@gmail.com
+2025/11/26 12:57:20 Sent to alice@gmail.com
+2025/11/26 12:57:20 Sending to bob@gmail.com: Hey UserB! Get 30% off – https://example.com/offer/bob
+```
 
 # Campaign Service – Go Backend Exercise
 
@@ -44,7 +61,7 @@ campaign-service/
 
 ```powershell
 # 1. Clone & enter directory
-git clone https://github.com/yourname/campaign-service.git
+git clone https://github.com/gilly7/campaign-service-go.git
 cd campaign-service
 
 # 2. Start PostgreSQL & Redis
@@ -72,7 +89,7 @@ Invoke-RestMethod http://localhost:8080/health
 Invoke-RestMethod http://localhost:8080/campaigns -Method POST -ContentType "application/json" -Body '{
   "name": "Black Friday Blast",
   "template": "Hey {{.FirstName}}! Get {{.Discount}}% off – claim here: {{.OfferURL}}",
-  "user_ids": ["alice", "bob", "charlie"]
+  "user_ids": ["alice", "bob", "ngenogilbert07"]
 }'
 ```
 
@@ -186,7 +203,7 @@ Invoke-RestMethod http://localhost:8080/health
 Invoke-RestMethod http://localhost:8080/campaigns -Method POST -ContentType "application/json" -Body '{
   "name": "Black Friday Blast",
   "template": "Hey {{.FirstName}}! Get {{.Discount}}% off – claim here: {{.OfferURL}}",
-  "user_ids": ["alice", "bob", "charlie"]
+  "user_ids": ["alice", "bob", "ngenogilbert254"]
 }'
 
 Watch the server console – you’ll see real-time personalized messages being processed!API EndpointsMethod
