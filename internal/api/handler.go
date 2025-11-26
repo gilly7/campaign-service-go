@@ -22,7 +22,19 @@ func (h *Handler) Router() http.Handler {
 	r := chi.NewRouter()
 	r.Post("/campaigns", h.CreateCampaign)
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("OK")) })
+	r.Get("/campaigns/{id}", h.GetCampaign)
 	return r
+}
+
+func (h *Handler) GetCampaign(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	// In real version: fetch from DB
+	json.NewEncoder(w).Encode(map[string]any{
+		"id":     id,
+		"name":   "Example Campaign",
+		"status": "active",
+		"message": "GET endpoint ready — would fetch from DB in full version",
+	})
 }
 
 func (h *Handler) CreateCampaign(w http.ResponseWriter, r *http.Request) {

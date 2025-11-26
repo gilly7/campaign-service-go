@@ -9,7 +9,6 @@ import (
 )
 
 var (
-	// Global client with sane defaults (used by all functions below)
 	HTTP = &http.Client{
 		Timeout: 15 * time.Second,
 		Transport: &http.Transport{
@@ -20,7 +19,7 @@ var (
 	}
 )
 
-// CreateCampaign is a helper you can call from tests or main()
+// CreateCampaign sends a request to create a new campaign
 func CreateCampaign(baseURL string, name, template string, userIDs ...string) (*http.Response, error) {
 	url := fmt.Sprintf("%s/campaigns", baseURL)
 	payload := map[string]any{

@@ -97,10 +97,11 @@ Watch the server console – you’ll see real-time personalized messages being 
 
 ## API Endpoints
 
-| Method | Endpoint         | Description                              |
-|--------|------------------|------------------------------------------|
-| GET    | /health          | Health check                             |
-| POST   | /campaigns       | Create campaign + enqueue messages       |
+| Method | Endpoint             | Description                              |
+|--------|----------------------|------------------------------------------|
+| GET    | /health              | Health check                             |
+| POST   | /campaigns           | Create campaign + enqueue messages       |
+| GET    | /campaigns/{id}      | Get campaign details (stub)              |
 
 ### Request body example
 
