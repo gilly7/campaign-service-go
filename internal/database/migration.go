@@ -10,14 +10,14 @@ import (
 	"github.com/pressly/goose/v3"
 )
 
-// runMigrations reads migrations from the real filesystem (100% reliable)
+// runMigrations applies database migrations using goose.
 func runMigrations(dbURL string) error {
 	// Find the project root (works from any location)
 	_, currentFile, _, _ := runtime.Caller(0)
 	projectRoot := filepath.Join(filepath.Dir(filepath.Dir(currentFile)), "..")
 	migrationDir := filepath.Join(projectRoot, "migrations")
 
-	// Debug: show the path
+	// Debug: show the path being used
 	log.Printf("Looking for migrations in: %s", migrationDir)
 
 	// Open DB connection for goose
@@ -27,10 +27,10 @@ func runMigrations(dbURL string) error {
 	}
 	defer db.Close()
 
-	// Set dialect
+	// Set the dialect
 	goose.SetDialect("postgres")
 
-	// Run migrations from real folder
+	// Apply migrations
 	if err := goose.Up(db, migrationDir); err != nil {
 		return err
 	}
