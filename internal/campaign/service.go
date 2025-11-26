@@ -39,18 +39,24 @@ func (s *Service) CreateCampaign(ctx context.Context, req models.CreateCampaignR
 		return nil, err
 	}
 
-	for i, userID := range req.UserIDs {
+	for _, userID := range req.UserIDs {
+		profile, err := s.repo.GetUserProfile(userID)
+		if err != nil {
+			log.Printf("Failed to get profile for %s: %v", userID, err)
+			continue
+		}
+
 		data := map[string]interface{}{
-			"FirstName": "User" + string(rune('A'+i%26)),
-			"Discount":  20 + (i%3)*10,
-			"OfferURL":  "https://example.com/offer/" + userID,
+			"FirstName": profile.FirstName,
+			"Discount":  profile.Discount,
+			"OfferURL":  "https://company.com/offer/" + userID,
 		}
 
 		msg := models.CampaignMessage{
 			ID:         uuid.New().String(),
 			CampaignID: campaign.ID,
 			UserID:     userID,
-			UserEmail:  userID + "@gmail.com",
+			UserEmail:  profile.Email,
 			UserData:   data,
 		}
 
@@ -65,6 +71,19 @@ func (s *Service) CreateCampaign(ctx context.Context, req models.CreateCampaignR
 	}
 
 	return campaign, nil
+}
+
+func (s *Service) GetCampaignByID(id string) (models.Campaign, error) {
+	var c models.Campaign
+	err := s.db.QueryRow(context.Background(),
+		`SELECT id, name, template, status, created_at, scheduled_at 
+         FROM campaigns WHERE id = $1`, id).
+		Scan(&c.ID, &c.Name, &c.Template, &c.Status, &c.CreatedAt, &c.ScheduledAt)
+
+	if err != nil {
+		return c, err
+	}
+	return c, nil
 }
 
 func (s *Service) StartWorker(ctx context.Context) {

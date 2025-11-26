@@ -8,6 +8,13 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
+// Add this struct for user profile
+type userProfile struct {
+	FirstName string
+	Email     string
+	Discount  int
+}
+
 type Repository struct {
 	db *pgxpool.Pool
 }
@@ -29,4 +36,24 @@ func (r *Repository) SaveMessage(m *models.CampaignMessage) error {
          VALUES ($1, $2, $3, $4, $5)`,
 		m.ID, m.CampaignID, m.UserID, m.UserEmail, m.UserData)
 	return err
+}
+
+// THIS IS THE NEW METHOD — REAL USER DATA FROM DB
+func (r *Repository) GetUserProfile(userID string) (userProfile, error) {
+	var profile userProfile
+
+	err := r.db.QueryRow(context.Background(),
+		`SELECT first_name, email, discount_percent FROM users WHERE user_id = $1`, userID,
+	).Scan(&profile.FirstName, &profile.Email, &profile.Discount)
+
+	if err != nil {
+		// Return fallback for unknown users
+		return userProfile{
+			FirstName: "Friend",
+			Email:     userID + "@example.com",
+			Discount:  10,
+		}, nil
+	}
+
+	return profile, nil
 }

@@ -8,6 +8,7 @@ import (
 	"campaign-service/internal/models"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/jackc/pgx/v5"
 )
 
 type Handler struct {
@@ -28,13 +29,19 @@ func (h *Handler) Router() http.Handler {
 
 func (h *Handler) GetCampaign(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
-	// In real version: fetch from DB
-	json.NewEncoder(w).Encode(map[string]any{
-		"id":     id,
-		"name":   "Example Campaign",
-		"status": "active",
-		"message": "GET endpoint ready — would fetch from DB in full version",
-	})
+
+	campaign, err := h.service.GetCampaignByID(id)
+	if err == pgx.ErrNoRows {
+		http.Error(w, "Campaign not found", http.StatusNotFound)
+		return
+	}
+	if err != nil {
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(campaign)
 }
 
 func (h *Handler) CreateCampaign(w http.ResponseWriter, r *http.Request) {
